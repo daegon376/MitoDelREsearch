@@ -20,11 +20,12 @@ seq = full_seq  # [fragment_start:fragment_end]
 # print('Последовательность в работе: ' + seq)
 print('Длина исследуемой области: ' + str(len(seq)))
 
-del_length_min = int(input('Минимальная длина делеции: '))
-del_length_max = int(input('Максимальная длина делеции: '))
-marg_length = int(input('Длина "боков": '))
-mask_length = int(input('Длина маскирования нуклеотидов = половина шага по длинам делеций \n'
-                        '(ноль -> выкл. -> шаг в 1 нукл): '))
+del_length_min = int(1)  # input('Минимальная длина делеции: '))
+del_length_max = int(20)  # input('Максимальная длина делеции: '))
+marg_length = int(25)  # input('Длина "боков": '))
+mask_length = int(10)  # input('Длина маскирования нуклеотидов = половина шага по длинам делеций \n'
+                       # '(ноль -> выкл. -> шаг в 1 нукл): '))
+both_strands = str(input('генерировать для одной цепи (+) или для двух (+-)? '))
 
 if mask_length == 0:  # шаг по делециям != 0
     step_length = int(1)
@@ -33,6 +34,20 @@ else:
 
 start_time = datetime.now()  # запуск таймера
 
+def complementary_conversion(line):
+    new_line = str('')
+    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'],
+                               ['M', 'K'], ['K', 'M'], ['R', 'Y'], ['Y', 'R'], ['W', 'W'], ['S', 'S'],
+                               ['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H']]
+    for letter in line:
+        for a in complementary_list:
+            if letter == a[0]:
+                new_line += a[1]
+                break
+
+    return new_line
+
+
 
 def reg_exp_generator(sequence, deletion_length, margin_length=30, masking=10):
     for i in range(len(sequence) - int(deletion_length + 2 * margin_length)):
@@ -40,22 +55,31 @@ def reg_exp_generator(sequence, deletion_length, margin_length=30, masking=10):
         deletion_end = int(deletion_start + deletion_length)
         reg_exp_start = int(i)
         reg_exp_end = int(deletion_end + margin_length)
-        left_margin = str(sequence[reg_exp_start:deletion_start - masking])
-        right_margin = str(sequence[deletion_end + masking:reg_exp_end])
-        del_info = str('del_start {0}; del_end {1}; {2} re:'.format(str(deletion_start - masking),
-                                                                    str(deletion_end + masking),
-                                                                    str(deletion_length + 2 * masking)))
-        reg_exp_seq = left_margin + '([ATGC]{0,' + str(masking * 2) + '})' + right_margin + '\n'
+        left_arm = str(sequence[reg_exp_start:deletion_start - masking])
+        right_arm = str(sequence[deletion_end + masking:reg_exp_end])
+        for direction in ['+', '-']:
+            del_info = str('del_start {0}; del_end {1}; {2} {3} re:'.format(str(deletion_start - masking),
+                                                                            str(deletion_end + masking),
+                                                                            str(direction),
+                                                                            str(deletion_length + 2 * masking)))
+            if direction == '-' and both_strands == '+-':
+                larm = left_arm
+                left_arm = complementary_conversion(right_arm[::-1])
+                right_arm = complementary_conversion(larm[::-1])
 
-        replacements = [['W', '[AT]'], ['M', '[AC]'], ['R', '[AG]'], ['K', '[GT]'], ['S', '[GC]'], ['Y', '[CT]']]
-        for a in replacements:
-            if reg_exp_seq.count(a[0]) >> 0:  # есть ли буква в регулярке
-                for i in re.finditer(a[0], reg_exp_seq):
-                    letter_index = i.start()
+            reg_exp_seq = left_arm + '([ATGC]{0,' + str(masking * 2) + '})' + right_arm + '\n'
+
+            replacements_dict = [['W', '[AT]'], ['M', '[AC]'], ['R', '[AG]'], ['K', '[GT]'], ['S', '[GC]'],
+                                 ['Y', '[CT]'],['B', '[CGT]'], ['D', '[AGT]'], ['H', '[ACT]'], ['V', '[ACG]'],
+                                 ['N', '[ATGC]']]
+
+            for a in replacements_dict:
+                for i in range(reg_exp_seq.count(a[0])):
+                    letter_index = reg_exp_seq.index(a[0])
                     reg_exp_seq = reg_exp_seq[:letter_index] + a[1] + reg_exp_seq[letter_index + 1:]
 
-        with open('output.txt', 'a') as output:
-            output.write(str(del_info + reg_exp_seq))
+            with open('output.txt', 'a') as output:
+                output.write(str(del_info + reg_exp_seq))
     return
 
 

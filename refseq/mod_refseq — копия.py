@@ -108,6 +108,7 @@ with open('sequence.fasta') as seq_inp_file:
         else:
             sequence = str(sequence + str(s[:-1]))
 
+
 old_len = len(replacements)
 replacements = locus_conductor(replacements)
 replacements = convert_to_IUPAC(replacements)
@@ -117,5 +118,3 @@ print(len(replacements), old_len)
 with open('modified_refseq.fasta', 'w') as output_file:
     output_file.write(replacer(sequence, replacements))
 print('RefSeq is successfully modified!')
-
-
