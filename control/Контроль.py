@@ -12,6 +12,22 @@ with open('sequence.fasta') as f:
 input_list = list(input_sequence)
 input_list_len = len(input_list)
 input_list_for_del = input_list[:]  ## создаём копию листа для работы в функции
+input_list_for_del_noncompl = input_list[:]
+
+# создание комплементарной строки 
+
+def complementary_conversion(input_list_for_del_noncompl):
+    input_list_for_del_compl = str('')
+    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G']]
+    for letter in input_list_for_del_noncompl:
+        for a in complementary_list:
+            if letter == a[0]:
+                input_list_for_del_compl += a[1]
+                break
+    return input_list_for_del_compl
+test = complementary_conversion(input_list_for_del_noncompl)
+print (test)
+
 del_start = random.randrange(0, input_list_len - 100, 1)  # # случайная координата начала делеции и точка считывания в
 # цикле ниже, точка старта - не позднее чем за 100 элементов до конца последовательности (костыль)
 del_end = del_start + del_len  ## random.randrange(10,15,1) - длина проверочной делеции, c - координата конца делеции
@@ -71,7 +87,7 @@ while number_reads != 0:
         a = a + 1
 
 with open('test_answer.txt', 'a') as answer:  ## выводит количество делеций
-    print("АНДРЮХА У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
+    print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
 print('Done!')
 ## j = 10 ## число тестовых ридов
 ## while j != 0:
