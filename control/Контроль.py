@@ -33,14 +33,14 @@ with open('test_answer.txt', 'a') as answer:  ## выводит делецию �
     print(answer_left, del_string, answer_right, file=answer)
     
 # для тестовых нужд
-sequence_test = ''.join (input_list_for_del)
+sequence_test = ''.join (noncompl_del_list)
 print (sequence_test)
 
 # создание комплементарной строки 
 
 def complementary_conversion(noncompl_del_list):
     input_list_for_del_compl = str('')
-    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G']]
+    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'],['M', 'K'], ['K', 'M'], ['R', 'Y'], ['Y', 'R'], ['W', 'W'], ['S', 'S'],['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H'], ['N', 'N']]
     for letter in noncompl_del_list:
         for a in complementary_list:
             if letter == a[0]:
