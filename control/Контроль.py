@@ -33,8 +33,9 @@ with open('test_answer.txt', 'a') as answer:  ## выводит делецию �
     print(answer_left, del_string, answer_right, file=answer)
     
 # для тестовых нужд
-sequence_test = ''.join (noncompl_del_list)
-print (sequence_test)
+#print (sequence_with_deletion_straight)
+
+sequence_with_deletion_straight = ''.join (noncompl_del_list)
 
 # создание комплементарной строки 
 
@@ -47,8 +48,8 @@ def complementary_conversion(noncompl_del_list):
                 input_list_for_del_compl += a[1]
                 break
     return input_list_for_del_compl
-test = complementary_conversion(noncompl_del_list)
-print (test)
+sequence_with_deletion_compl = complementary_conversion(noncompl_del_list)
+#print (sequence_with_deletion_compl) # тестовый
 
 ## создали случайную делецию, нарежем несколько ридов, куда она ранее входила
 
@@ -57,10 +58,14 @@ def generate_read_with_del(del_start):
     read_bias = random.randrange(0, 50, 1)  ## начало рида за 0-50 нуклеотидов до начала делеции
     read_start = del_start - read_bias - del_len  ## возвращаем в точку начала делеции и вычитаем случайное число d
     read_end = read_start + read_len  ## конец рида - точка начала + длина рида
-    complementary_path = random.randrange (1,100)
     if read_start < 0:  ## если координата начала рида из-за вычитания b - 10 - d вышла отрицательной - приравниваем её к 0
         read_start = 0
-    a = input_list_for_del[read_start:read_end + 1]
+    complementary_path = random.randrange (1,100)
+    if complementary_path <= complementary_percentage:
+        a = sequence_with_deletion_straight[read_start:read_end + 1]
+    else:
+        b = sequence_with_deletion_compl[read_start:read_end + 2]
+        a = b[::-1]
     string_read_with_del = ''.join(a)
     return (string_read_with_del)
 
