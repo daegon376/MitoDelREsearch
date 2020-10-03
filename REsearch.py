@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 
-reg_exp_file = open('output.txt')
+reg_exp_file = open('RE.txt')
 reads_file = open('B:/Chimera/control/test_output_reads.txt')
 
 reads = str()  # все риды записываем в одну строку

@@ -4,8 +4,13 @@ import random
 read_len = 100  # длина тестовых ридов
 del_len = random.randrange(10, 20, 1)  # длина делеции в нуклеотидах (от,до,шаг)
 del_percentage = 5  # процент тестовых ридов с делециями
+<<<<<<< Updated upstream
 number_reads = 1000 # число ридов (сумма изначальных и с делецией)
 complementary_percentage = 50 # процент тестовых ридов с делециями, сделанных с комплементарной цепи
+=======
+number_reads = 1000  # число ридов (сумма изначальных и с делецией)
+complementary_percentage = 50  # процент тестовых ридов с делециями, сделанных с комплементарной цепи
+>>>>>>> Stashed changes
 
 ## !!КАЖДЫЙ ЗАПУСК ЗАТИРАЕТ ФАЙЛЫ answer.txt, output_testing_reads.txt!!
 with open('sequence.fasta') as f:
@@ -23,7 +28,11 @@ with open('test_answer.txt',
 del input_list_for_del[del_start:del_end]
 
 del_list = input_list[del_start:del_end]
+<<<<<<< Updated upstream
 noncompl_del_list = input_list_for_del[:] # копия
+=======
+noncompl_del_list = input_list_for_del[:]  # копия
+>>>>>>> Stashed changes
 del_string = ''.join(del_list)
 list_for_answer_left = input_list[del_start - 50:del_start]
 list_for_answer_right = input_list[del_end:del_end + 50]
@@ -35,6 +44,7 @@ with open('test_answer.txt', 'a') as answer:  ## выводит делецию �
 # для тестовых нужд
 #print (sequence_with_deletion_straight)
 
+<<<<<<< Updated upstream
 sequence_with_deletion_straight = ''.join (noncompl_del_list)
 
 # создание комплементарной строки 
@@ -42,14 +52,38 @@ sequence_with_deletion_straight = ''.join (noncompl_del_list)
 def complementary_conversion(noncompl_del_list):
     input_list_for_del_compl = str('')
     complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'],['M', 'K'], ['K', 'M'], ['R', 'Y'], ['Y', 'R'], ['W', 'W'], ['S', 'S'],['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H'], ['N', 'N']]
+=======
+# для тестовых нужд
+# print (sequence_with_deletion_straight)
+
+sequence_with_deletion_straight = ''.join(noncompl_del_list)
+
+
+# создание комплементарной строки
+
+def complementary_conversion(noncompl_del_list):
+    input_list_for_del_compl = str('')
+    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'], ['M', 'K'], ['K', 'M'], ['R', 'Y'],
+                          ['Y', 'R'], ['W', 'W'], ['S', 'S'], ['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H'],
+                          ['N', 'N']]
+>>>>>>> Stashed changes
     for letter in noncompl_del_list:
         for a in complementary_list:
             if letter == a[0]:
                 input_list_for_del_compl += a[1]
                 break
     return input_list_for_del_compl
+<<<<<<< Updated upstream
 sequence_with_deletion_compl = complementary_conversion(noncompl_del_list)
 #print (sequence_with_deletion_compl) # тестовый
+=======
+
+
+sequence_with_deletion_compl = complementary_conversion(noncompl_del_list)
+
+
+# print (sequence_with_deletion_compl) # тестовый
+>>>>>>> Stashed changes
 
 ## создали случайную делецию, нарежем несколько ридов, куда она ранее входила
 
@@ -60,7 +94,11 @@ def generate_read_with_del(del_start):
     read_end = read_start + read_len  ## конец рида - точка начала + длина рида
     if read_start < 0:  ## если координата начала рида из-за вычитания b - 10 - d вышла отрицательной - приравниваем её к 0
         read_start = 0
+<<<<<<< Updated upstream
     complementary_path = random.randrange (1,100)
+=======
+    complementary_path = random.randrange(1, 100)
+>>>>>>> Stashed changes
     if complementary_path <= complementary_percentage:
         a = sequence_with_deletion_straight[read_start:read_end + 1]
     else:
