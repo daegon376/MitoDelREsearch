@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 
 reg_exp_file = open('RE.txt')
-reads_file = open('B:/Chimera/control/test_output_reads.txt')
+reads_file = open('B:/MitoDelREsearch/control/test_output_reads.txt')
 
 reads = str()  # все риды записываем в одну строку
 for s in reads_file:
