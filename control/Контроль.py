@@ -10,8 +10,8 @@ start_time = datetime.now()  # запуск таймера
 ## КОНФИГУРАЦИЯ
 read_len = 100  # длина тестовых ридов
 del_len = random.randrange(10, 20, 1)  # длина делеции в нуклеотидах (от,до,шаг)
-del_percentage = 5  # процент тестовых ридов с делециями
-number_reads = 10000000 # число ридов (сумма изначальных и с делецией)
+del_percentage = 25  # процент тестовых ридов с делециями
+number_reads = 1000000 # число ридов (сумма изначальных и с делецией)
 complementary_percentage = 50 # процент тестовых ридов с делециями, сделанных с комплементарной цепи
 N_chance = 10 # процент тестовых ридов (всех) с заменой части нуклеотидов на N
 
@@ -63,7 +63,7 @@ sequence_with_deletion_compl = complementary_conversion(noncompl_del_list)
 ## создали случайную делецию, нарежем несколько ридов, куда она ранее входила
 
 
-def generate_read_with_del():
+def generate_read_with_del(x):
     read_bias = random.randrange(0, 50, 1)  ## начало рида за 0-50 нуклеотидов до начала делеции
     read_start = del_start - read_bias - del_len  ## возвращаем в точку начала делеции и вычитаем случайное число d
     read_end = read_start + read_len  ## конец рида - точка начала + длина рида
@@ -90,11 +90,51 @@ if __name__ == "__main__":
     num_proc = multiprocessing.cpu_count() - 1
     print (num_proc)
     number_reads_without_del = number_reads*(100-del_percentage)
-    
-    work_pool = Pool(num_proc)
-    end_list = work_pool.map(generate_read_without_del, (range(1,number_reads,1)))
-    end = '\n'.join(end_list)
+    number_reads_with_del = number_reads*(0+del_percentage)
+    if num_proc <= 1:
+        work_pool_del = Pool(1)
+        work_pool_without = Pool(1)
+    if 1<num_proc<4:
+        work_pool_del = Pool(1)
+        work_pool_without = Pool(2)
+    if 4<num_proc<6:
+        work_pool_del = Pool(1)
+        work_pool_without = Pool(3)
+    if 6<num_proc:
+        work_pool_del = Pool(round(num_proc*0.25))
+        work_pool_without = Pool(round(num_proc*0.75))
+    without_del_list = work_pool_without.map(generate_read_without_del, (range(1,number_reads_without_del,1)))
+    with_del_list =  work_pool_del.map(generate_read_with_del, (range(1,number_reads_with_del,1)))
+    end = '\n'.join(without_del_list)
+    del_end = '\n'.join(with_del_list)
+
+    print(del_end)
     print(end)
 
+# with open('test_output_reads.txt', 'w') as output:  ## !!ОСТОРОЖНО, ЗАТИРАЕТ ФАЙЛ test_output_reads.txt!!
+#     print('')
+# a = 0
+# while number_reads != 0:
+#     number_reads = number_reads - 1
+#     path = random.randrange(1, 100)
+#     if path > del_percentage:
+#         output_read = generate_read_without_del(1)
+#         with open('test_output_reads.txt', 'a') as output:
+#             output.write(output_read + '\n')
+#     else:
+#         output_read = generate_read_with_del()
+#         with open('test_output_reads.txt', 'a') as output:
+#             output.write(output_read + '\n')
+a = 1 + 1
 
-number_reads_with_del = number_reads*(0+del_percentage)
+with open('test_answer.txt', 'a') as answer:  ## выводит количество делеций
+    print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
+    print('Done!')
+print('Полное время: ' + str(datetime.now() - start_time))
+
+## j = 10 ## число тестовых ридов
+## while j != 0:
+##    read = generate_read(del_start)
+##    read_without_del = read.replace(del_string,'')
+##    j = j-1
+##    print(read_without_del)
