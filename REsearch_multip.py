@@ -24,7 +24,7 @@ def re_search(re_list, reads):
             reads_with_del = re.findall(new_reg_exp, reads)
             amount_of_finded_reads = str(len(reads_with_del))
             deletion_length = str(int(re.search(r'\d*$', info).group(0)) - len(deletions[0]))  # вычисляем длину делеции
-            with open('REsults_multiproc.txt', 'a') as output:  # пишем в аутпут
+            with open('REsults_multi.txt', 'a') as output:  # пишем в аутпут
                 print('\n Regular expression:', reg_exp,
                       '\n               Info:', info,
                       '\n    Deletion length:', deletion_length,
@@ -36,9 +36,9 @@ if __name__ == '__main__':
 
     cwd = os.getcwd()
 
-    reg_exp_file = open('RE.txt')
-    reads_file = open(cwd + '\\control\\test_output_reads.txt')
-    f = open('REsults_multiproc.txt', 'w')
+    reg_exp_file = open('RECDmin.txt')
+    reads_file = open(cwd + '\\control\\test_output_reads.txt')  # \\refseq\\mtDNA +-strands with DmtDNA4977.txt')
+    f = open('REsults_multi.txt', 'w')
     f.write('')  # clean output
     reads = str()  # все риды записываем в одну строку
     for s in reads_file:
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         reg_exp_l.append(s)
         n += 1
 
-    number_to_split = (n//6) + 1
+    number_to_split = (n//8) + 1
     splited_re = list(split_every(number_to_split, reg_exp_l))
 
     procs = []

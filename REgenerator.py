@@ -28,11 +28,11 @@ print('Последовательность в работе: ' + seq)
 print('Длина исследуемой области: ' + str(len(seq)))
 
 arm_length = int(input('Длина "боков": '))
-mask_length = int(input('Длина маскирования нуклеотидов = половина шага по длинам делеций \n (ноль -> выкл. -> шаг в 1 нукл): '))
+mask_length = int(input('Длина маскирования нуклеотидов = половина шага по длинам делеций \n'
+                        ' (ноль -> выкл. -> шаг в 1 нукл): '))
 del_length_min = int(input('Минимальная длина делеции: '))
 del_length_max = int(input('Максимальная длина делеции: '))
 both_strands = str(input('генерировать для одной цепи (+) или для двух (+-)? '))
-
 
 if mask_length == 0:  # шаг по делециям != 0
     step_length = int(1)
@@ -41,17 +41,16 @@ else:
 
 start_time = datetime.now()  # запуск таймера
 
-def complementary_conversion(line):
+
+def letter_replacer(line, list_of_replacements):
     new_line = str('')
-    complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'],
-                          ['M', 'K'], ['K', 'M'], ['R', 'Y'], ['Y', 'R'], ['W', 'W'], ['S', 'S'],
-                          ['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H'], ['N', 'N']]
     for letter in line:
-        for a in complementary_list:
+        for a in list_of_replacements:
             if letter == a[0]:
                 new_line += a[1]
                 break
     return new_line
+
 
 def reg_exp_generator(sequence, deletion_length, arm_length=30, masking=10):
     for i in range(len(sequence) - int(deletion_length + 2 * arm_length)):
@@ -61,28 +60,33 @@ def reg_exp_generator(sequence, deletion_length, arm_length=30, masking=10):
         reg_exp_end = int(deletion_end + arm_length)
         left_arm = str(sequence[reg_exp_start:deletion_start - masking])
         right_arm = str(sequence[deletion_end + masking:reg_exp_end])
+
+        complementary_list = [['A', 'T'], ['T', 'A'], ['G', 'C'], ['C', 'G'],
+                              ['M', 'K'], ['K', 'M'], ['R', 'Y'], ['Y', 'R'], ['W', 'W'], ['S', 'S'],
+                              ['B', 'V'], ['V', 'B'], ['H', 'D'], ['D', 'H'], ['N', 'N']]
+
+        IUPAC_to_RE_list = [['A', '[AN]'], ['T', '[TN]'], ['G', '[GN]'], ['C', '[CN]'],
+                            ['W', '[ATN]'], ['M', '[ACN]'], ['R', '[AGN]'], ['K', '[GTN]'], ['S', '[GCN]'],
+                            ['Y', '[CTN]'], ['B', '[CGTN]'], ['D', '[AGTN]'], ['H', '[ACTN]'], ['V', '[ACGN]'],
+                            ['N', '[ATGCN]']]
+
         for direction in ['+', '-']:
             if both_strands == '+' and direction == '-':
                 break
             elif both_strands == '+-' and direction == '-':
                 larm = left_arm
-                left_arm = complementary_conversion(right_arm[::-1])
-                right_arm = complementary_conversion(larm[::-1])
+                left_arm = letter_replacer(right_arm[::-1], complementary_list)
+                right_arm = letter_replacer(larm[::-1], complementary_list)
+
             del_info = str('del_start {0}; del_end {1}; {2} {3} re:'.format(str(deletion_start - masking + fragment_start),
                                                                             str(deletion_end + masking + fragment_start),
                                                                             str(direction),
                                                                             str(deletion_length + 2 * masking)))
 
-            reg_exp_seq = left_arm + '([ATGC]{0,' + str(masking * 2) + '})' + right_arm + '\n'
+            new_left_arm = letter_replacer(left_arm, IUPAC_to_RE_list)
+            new_right_arm = letter_replacer(right_arm, IUPAC_to_RE_list)
 
-            replacements_dict = [['W', '[AT]'], ['M', '[AC]'], ['R', '[AG]'], ['K', '[GT]'], ['S', '[GC]'],
-                                 ['Y', '[CT]'], ['B', '[CGT]'], ['D', '[AGT]'], ['H', '[ACT]'], ['V', '[ACG]'],
-                                 ['N', '[ATGC]']]
-
-            for a in replacements_dict:
-                for i in range(reg_exp_seq.count(a[0])):
-                    letter_index = reg_exp_seq.index(a[0])
-                    reg_exp_seq = reg_exp_seq[:letter_index] + a[1] + reg_exp_seq[letter_index + 1:]
+            reg_exp_seq = str(new_left_arm + '([ATGCN]{0,' + str(masking * 2) + '})' + new_right_arm + '\n')
 
             with open('RE.txt', 'a') as output:
                 output.write(str(del_info + reg_exp_seq))
