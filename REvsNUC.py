@@ -17,9 +17,9 @@ with open('RE.txt') as re_file:
                     regexp = re.split(r're:', re_line)[1][:-1]
                     calls += len(re.findall(regexp, line))
 
-        print(str(x) + '. calls: ' + str(calls) + '. ' + re_line)
+        print('calls: ' + str(calls) + '. ' + re_line)
         with open('log_CDREvsNUC.txt', 'a') as output_file:
-            output_file.write(str(x) + '. calls: ' + str(calls) + '. ' + re_line)
+            output_file.write('calls: ' + str(calls) + '. ' + re_line)
         if calls >> 1:
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         
