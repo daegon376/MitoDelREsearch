@@ -1,12 +1,12 @@
 import random
 import multiprocessing
 import sys
-with open('вывод_делеций.txt','w'):
-    print('')
-sys.stdout = open('вывод_делеций.txt', 'a')
+sys.stdout = open('output_deletion_for_RESearch.txt', 'w')
+print('')
+sys.stdout = open('output_deletion_for_RESearch.txt', 'a')
 from multiprocessing import Pool
-
 from datetime import datetime
+
 start_time = datetime.now()  # запуск таймера
 
 ## КОНФИГУРАЦИЯ
@@ -90,7 +90,6 @@ def generate_read_without_del(x):
     return (string_read_without_del)
 if __name__ == "__main__":
     num_proc = multiprocessing.cpu_count() - 1
-    print (num_proc)
     number_reads_without_del = number_reads*(100-del_percentage)
     number_reads_with_del = number_reads*(0+del_percentage)
     if num_proc <= 1:
@@ -127,12 +126,12 @@ if __name__ == "__main__":
 #         output_read = generate_read_with_del()
 #         with open('test_output_reads.txt', 'a') as output:
 #             output.write(output_read + '\n')
-a = number_reads*(((0+del_percentage))/100)
-sys.stdout = sys.__stdout__
-print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ")
-print('Done!')
-print('Полное время: ' + str(datetime.now() - start_time))
-input()
+#a = number_reads*(((0+del_percentage))/100)
+#with open('test_answer.txt', 'a') as answer:  ## выводит количество делеций
+#    print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
+#    print('Done!')
+ #   print('Полное время: ' + str(datetime.now() - start_time))
+
 ## j = 10 ## число тестовых ридов
 ## while j != 0:
 ##    read = generate_read(del_start)
