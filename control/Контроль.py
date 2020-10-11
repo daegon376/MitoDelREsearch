@@ -1,7 +1,9 @@
 import random
 import multiprocessing
 import sys
-sys.stdout = open('test_answer123.txt', 'a')
+with open('вывод_делеций.txt','w'):
+    print('')
+sys.stdout = open('вывод_делеций.txt', 'a')
 from multiprocessing import Pool
 
 from datetime import datetime
@@ -9,9 +11,9 @@ start_time = datetime.now()  # запуск таймера
 
 ## КОНФИГУРАЦИЯ
 read_len = 100  # длина тестовых ридов
-del_len = random.randrange(10, 20, 1)  # длина делеции в нуклеотидах (от,до,шаг)
+del_len = 100  # длина делеции в нуклеотидах (от,до,шаг)
 del_percentage = 25  # процент тестовых ридов с делециями
-number_reads = 1000000 # число ридов (сумма изначальных и с делецией)
+number_reads = 1000 # число ридов (сумма изначальных и с делецией)
 complementary_percentage = 50 # процент тестовых ридов с делециями, сделанных с комплементарной цепи
 N_chance = 10 # процент тестовых ридов (всех) с заменой части нуклеотидов на N
 
@@ -125,13 +127,12 @@ if __name__ == "__main__":
 #         output_read = generate_read_with_del()
 #         with open('test_output_reads.txt', 'a') as output:
 #             output.write(output_read + '\n')
-a = 1 + 1
-
-with open('test_answer.txt', 'a') as answer:  ## выводит количество делеций
-    print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
-    print('Done!')
+a = number_reads*(((0+del_percentage))/100)
+sys.stdout = sys.__stdout__
+print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ")
+print('Done!')
 print('Полное время: ' + str(datetime.now() - start_time))
-
+input()
 ## j = 10 ## число тестовых ридов
 ## while j != 0:
 ##    read = generate_read(del_start)
