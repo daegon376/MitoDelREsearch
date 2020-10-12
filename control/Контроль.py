@@ -112,8 +112,8 @@ if __name__ == "__main__":
         work_pool_without = Pool(round(num_proc*0.75))
     without_del_list = work_pool_without.map(generate_read_without_del, (range(1,number_reads_without_del,1)))
     with_del_list =  work_pool_del.map(generate_read_with_del, (range(1,number_reads_with_del,1)))
-    end = '\n'.join(without_del_list) + 'YES'
-    del_end = '\n'.join(with_del_list) + 'NO'
+    end = '\n'.join(without_del_list)
+    del_end = '\n'.join(with_del_list)
     with open ('output_deletion_for_RESearch.txt', 'a') as output:
         print(del_end)
         print(end)
