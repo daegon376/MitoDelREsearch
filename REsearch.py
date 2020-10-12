@@ -1,8 +1,10 @@
 from datetime import datetime
 import re
+import os
 
+cwd = os.getcwd()
 reg_exp_file = open('RE.txt')
-reads_file = open('B:/MitoDelREsearch/control/test_output_reads.txt')
+reads_file = open(cwd + '\\control\\test_output_reads.txt')
 
 reads = str()  # все риды записываем в одну строку
 for s in reads_file:
@@ -17,8 +19,8 @@ def re_search(reg_exp, info):
     pattern = re.compile(reg_exp)
     deletions = pattern.findall(reads)
     if len(deletions) != 0:  # если что-то нашли
-        new_reg_exp = str('.*' + str(re.split(r'\W\WATGC\W\W0.\d{1,3}\W\W', reg_exp)[0]) + deletions[0] +
-                          str(re.split(r'\W\WATGC\W\W0.\d{1,3}\W\W', reg_exp)[1]) + '.*')  # регулярка для поиска ридов с делецией
+        new_reg_exp = str('.*' + str(re.split(r'\W\WATGCN\W\W0.\d{1,3}\W\W', reg_exp)[0]) + deletions[0] +
+                          str(re.split(r'\W\WATGCN\W\W0.\d{1,3}\W\W', reg_exp)[1]) + '.*')  # регулярка для поиска ридов с делецией
         reads_with_del = re.findall(new_reg_exp, reads)
         amount_of_finded_reads = str(len(reads_with_del))
         deletion_length = str(int(re.search(r'\d*$', info).group(0)) - len(deletions[0]))  # вычисляем длину делеции

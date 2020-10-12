@@ -22,8 +22,7 @@ def re_search(re_list, reads):
         deletions = pattern.findall(reads)
         if len(deletions) != 0:  # если что-то нашли
             new_reg_exp = str('.*' + str(re.split(r'\W\WATGCN\W\W0.\d{1,3}\W\W', reg_exp)[0]) + deletions[0] +
-                              str(re.split(r'\W\WATGCN\W\W0.\d{1,3}\W\W', reg_exp)[
-                                      1]) + '.*')  # регулярка для поиска ридов с делецией
+                              str(re.split(r'\W\WATGCN\W\W0.\d{1,3}\W\W', reg_exp)[1]) + '.*')  # регулярка для поиска ридов с делецией
             reads_with_del = re.findall(new_reg_exp, reads)
             amount_of_finded_reads = str(len(reads_with_del))
             deletion_length = str(int(re.search(r'\d*$', info).group(0)) - len(deletions[0]))  # вычисляем длину делеции
@@ -38,13 +37,13 @@ def re_search(re_list, reads):
 if __name__ == '__main__':
     start_time = datetime.now()  # запуск таймера
     cwd = os.getcwd()
-    number_of_procecces = int(8)  # сколько процессов будет процессов. оставь 8, т.к. регулярок в 'RECDmin.txt' 8 шт
+    number_of_procecces = int(7)  # сколько процессов будет процессов. оставь 8, т.к. регулярок в 'RECDmin.txt' 8 шт
 
-    reg_exp_file = open('RECDmin.txt')  # файл с регулярками
-    reads_file = open(cwd + '\\control\\test_output_reads.txt')  # файл с ридами
+    reg_exp_file = open('RE.txt')  # файл с регулярками
+    reads_file = open(cwd + '\\control\\test_reads.txt')  # файл с ридами
     f = open('REsults_multi.txt', 'w')
     f.write('')  # clean output
-    reads = str()  # все риды записываем в одну строку !!! тут могут быть проблемы со скоростью !!!
+    reads = str()  # все риды записываем в одну строку !!! тут могут быть проблемы с ОЗУ!!!
     for s in reads_file:
         reads = str(reads + s)
 
