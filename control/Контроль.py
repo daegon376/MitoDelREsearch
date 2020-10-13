@@ -2,7 +2,6 @@ import random
 import multiprocessing
 import sys
 sys.stdout = open('output_deletion_for_RESearch.txt', 'w')
-print('')
 sys.stdout = open('output_deletion_for_RESearch.txt', 'a')
 from multiprocessing import Pool
 from datetime import datetime
@@ -72,13 +71,14 @@ def generate_read_with_del(x):
     read_end = read_start + read_len  ## конец рида - точка начала + длина рида
     if read_start < 0:  ## если координата начала рида из-за вычитания b - 10 - d вышла отрицательной - приравниваем её к 0
         read_start = 0
-    complementary_path = random.randrange (1,100)
-    if complementary_path >= complementary_percentage:
-        a = string_with_deletion_func[read_start:read_end + 1]
-    else:
-        sequence_with_deletion_compl = complementary_conversion()
-        b = sequence_with_deletion_compl[read_start:read_end + 2]
-        a = b[::-1]
+#    complementary_path = random.randrange (1,100)
+    a = string_with_deletion_func[read_start:read_end + 1]
+#    if complementary_path >= complementary_percentage:
+       
+#    else:
+#        sequence_with_deletion_compl = complementary_conversion()
+#        b = sequence_with_deletion_compl[read_start:read_end + 2]
+#        a = b[::-1]
     string_read_with_del = ''.join(a)
     return (string_read_with_del)
 
@@ -105,8 +105,8 @@ if __name__ == "__main__":
         work_pool_del = Pool(1)
         work_pool_without = Pool(2)
     if 4<num_proc<6:
-        work_pool_del = Pool(1)
-        work_pool_without = Pool(3)
+        work_pool_del = Pool(6)
+        work_pool_without = Pool(6)
     if 6<num_proc:
         work_pool_del = Pool(round(num_proc*0.25))
         work_pool_without = Pool(round(num_proc*0.75))
@@ -115,8 +115,8 @@ if __name__ == "__main__":
     end = '\n'.join(without_del_list)
     del_end = '\n'.join(with_del_list)
     with open ('output_deletion_for_RESearch.txt', 'a') as output:
-        print(del_end)
-        print(end)
+        output.write(del_end + '\n')
+        output.write(end)
 
 # with open('test_output_reads.txt', 'w') as output:  ## !!ОСТОРОЖНО, ЗАТИРАЕТ ФАЙЛ test_output_reads.txt!!
 #     print('')
@@ -133,10 +133,11 @@ if __name__ == "__main__":
 #         with open('test_output_reads.txt', 'a') as output:
 #             output.write(output_read + '\n')
 #a = number_reads*(((0+del_percentage))/100)
-#with open('test_answer.txt', 'a') as answer:  ## выводит количество делеций
-#    print("АНДРЮХА, У НАС", a, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
-#    print('Done!')
- #   print('Полное время: ' + str(datetime.now() - start_time))
+number_reads_with_del = round((number_reads*(0+del_percentage))/100)        
+with open('test_answer.txt', 'w') as answer:
+    print("АНДРЮХА, У НАС", number_reads_with_del, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
+    print('Done!', file=answer)
+    print('Полное время: ' + str(datetime.now() - start_time), file=answer)
 
 ## j = 10 ## число тестовых ридов
 ## while j != 0:
