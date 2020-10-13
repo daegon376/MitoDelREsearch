@@ -111,31 +111,9 @@ if __name__ == "__main__":
     with open ('output_deletion_for_RESearch.txt', 'a') as output:
         output.write(del_end + '\n')
         output.write(end)
-
-# with open('test_output_reads.txt', 'w') as output:  ## !!ОСТОРОЖНО, ЗАТИРАЕТ ФАЙЛ test_output_reads.txt!!
-#     print('')
-# a = 0
-# while number_reads != 0:
-#     number_reads = number_reads - 1
-#     path = random.randrange(1, 100)
-#     if path > del_percentage:
-#         output_read = generate_read_without_del(1)
-#         with open('test_output_reads.txt', 'a') as output:
-#             output.write(output_read + '\n')
-#     else:
-#         output_read = generate_read_with_del()
-#         with open('test_output_reads.txt', 'a') as output:
-#             output.write(output_read + '\n')
-#a = number_reads*(((0+del_percentage))/100)
 number_reads_with_del = round((number_reads*(0+del_percentage))/100)        
 with open('test_answer.txt', 'w') as answer:
     print("АНДРЮХА, У НАС", number_reads_with_del, "РИДОВ, ВОЗМОЖНА ДЕЛЕЦИЯ, ПО КОНЯМ", file=answer)
     print('Done!', file=answer)
     print('Полное время: ' + str(datetime.now() - start_time), file=answer)
 
-## j = 10 ## число тестовых ридов
-## while j != 0:
-##    read = generate_read(del_start)
-##    read_without_del = read.replace(del_string,'')
-##    j = j-1
-##    print(read_without_del)
