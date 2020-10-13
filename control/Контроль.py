@@ -101,15 +101,9 @@ if __name__ == "__main__":
     if num_proc <= 1:
         work_pool_del = Pool(1)
         work_pool_without = Pool(1)
-    if 1<num_proc<4:
-        work_pool_del = Pool(1)
-        work_pool_without = Pool(2)
-    if 4<num_proc<6:
-        work_pool_del = Pool(6)
-        work_pool_without = Pool(6)
-    if 6<num_proc:
-        work_pool_del = Pool(round(num_proc*0.25))
-        work_pool_without = Pool(round(num_proc*0.75))
+    if 1<num_proc<99999999:
+        work_pool_del = num_proc
+        work_pool_without = num_proc
     without_del_list = work_pool_without.map(generate_read_without_del, (range(1,number_reads_without_del,1)))
     with_del_list =  work_pool_del.map(generate_read_with_del, (range(1,number_reads_with_del,1)))
     end = '\n'.join(without_del_list)
